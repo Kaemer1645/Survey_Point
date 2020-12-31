@@ -30,6 +30,7 @@ from .resources import *
 # Import the code for the dialog
 from .SurveyPoint_dialog import SurveyPointDialog
 import os.path
+from SurveyPoint.ui.createPointsWindow import CreatePointsWindow
 
 
 from .engine import main
@@ -173,7 +174,6 @@ class SurveyPoint:
         # will be set False in run()
         self.first_start = True
 
-        self.narzedzie = main.Create_points(self.iface.mapCanvas())
 
     def unload(self):
         """Removes the plugin menu item and icon from QGIS GUI."""
@@ -192,9 +192,10 @@ class SurveyPoint:
         if self.first_start == True:
             self.first_start = False
             self.dlg = SurveyPointDialog()
+
         # show the dialog
         self.dlg.show()
-        self.dlg.pb_create_pts_new_wind.clicked.connect(self.zrob)
+
         # Run the dialog event loop
         result = self.dlg.exec_()
         # See if OK was pressed
@@ -202,7 +203,3 @@ class SurveyPoint:
             # Do something useful here - delete the line containing pass and
             # substitute with your code.
             pass
-
-    def zrob(self):
-        self.iface.mapCanvas().setMapTool(self.narzedzie)   #to zadzialalo - sprwadzic dlaczego, ktora intancja jest zla
-        #ORAZ CZY MUSI BYC TEN IFACE

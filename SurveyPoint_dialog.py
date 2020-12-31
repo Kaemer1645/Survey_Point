@@ -26,16 +26,14 @@ import os
 
 from qgis.PyQt import uic
 from qgis.PyQt import QtWidgets
-from qgis.gui import QgsMapCanvas
+from qgis.PyQt.QtWidgets import QWidget, QAction
+from qgis.PyQt.QtCore import Qt
+from qgis.utils import iface
 
 from .engine import main
 from SurveyPoint.ui.createPointsWindow import CreatePointsWindow
 from SurveyPoint.ui.attributesWindow import AttributesWindow
 from SurveyPoint.ui.databaseWindow import DatabaseWindow
-
-
-#from .Second_window_test import Ui_Dialog - te usunac jak wyjdzie w main
-#from .Second_win_test2 import SecondWindow
 
 # This loads your .ui file so that PyQt can populate your plugin with the elements from Qt Designer
 FORM_CLASS, _ = uic.loadUiType(os.path.join(
@@ -53,29 +51,23 @@ class SurveyPointDialog(QtWidgets.QDialog, FORM_CLASS):
         # #widgets-and-dialogs-with-auto-connect
         self.setupUi(self)
 
+        self.iface = iface
+
+        
+        
         #create main instance
-        self.create_pts = main.Create_points(QgsMapCanvas())
+        self.create_pts = main.Create_points(self.iface.mapCanvas())        
         self.attrs = main.Attributes()
         self.database = main.Database()
 
-        #new window btns
 
-        self.crt_win_btns = CreatePointsWindow()
 
-        #self.crt_win_btns.pb_crt_pts.clicked.connect(self.create_points)
-        #self.pb_create_pts_new_wind.clicked.connect(self.create_points_window)
-        #self.pb_create_pts_new_wind.clicked.connect(self.create_points)
-
+        #create windows
+        self.pb_create_pts_new_wind.clicked.connect(self.create_points_window)
         self.pb_create_attrs_new_wind.clicked.connect(self.create_attributes_window)
         self.pb_create_db_new_wind.clicked.connect(self.create_database_window)
 
-        
 
-        
-    def create_points(self):
-        QgsMapCanvas().setMapTool(self.create_pts)
-        #print('cos jest')
-        #self.create_pts.create_pts()        
     
     def create_points_window(self):
         self.create_pts.create_points_window()
@@ -86,4 +78,4 @@ class SurveyPointDialog(QtWidgets.QDialog, FORM_CLASS):
     def create_database_window(self):
         self.database.database_window()
 
-
+        

@@ -26,6 +26,10 @@ import os
 
 from qgis.PyQt import uic
 from qgis.PyQt import QtWidgets
+from qgis.utils import iface
+from qgis.gui import QgsMapToolEmitPoint
+
+from SurveyPoint.engine import main
 
 # This loads your .ui file so that PyQt can populate your plugin with the elements from Qt Designer
 FORM_CLASS, _ = uic.loadUiType(os.path.join(
@@ -43,7 +47,18 @@ class CreatePointsWindow(QtWidgets.QDialog, FORM_CLASS):
         # #widgets-and-dialogs-with-auto-connect
         self.setupUi(self)
 
-
+        self.iface = iface
         
+        #self.create_pts = main.Create_points(self.iface.mapCanvas())
+        self.create_pts = QgsMapToolEmitPoint(self.iface.mapCanvas())
+        self.create_pts.canvasClicked.connect(self.klik)
+        self.pb_crt_pts.clicked.connect(self.my_edit_tool)
+
+    def my_edit_tool(self):
+        self.iface.mapCanvas().setMapTool(self.create_pts)
+
+    def klik(self, punkt, przycisk):
+        print(punkt,przycisk)
+
 
         
